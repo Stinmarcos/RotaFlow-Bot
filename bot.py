@@ -130,3 +130,17 @@ app.add_handler(MessageHandler(filters.Document.ALL, tratar_planilha))
 
 print("🤖 FlowRota Bot rodando...")
 app.run_polling()
+from flask import Flask
+import threading
+
+app_web = Flask(__name__)
+
+@app_web.route("/")
+def home():
+    return "FlowRota Bot está rodando!"
+
+def run_web():
+    app_web.run(host="0.0.0.0", port=10000)
+
+# Rodar Flask em thread separada
+threading.Thread(target=run_web).start()
