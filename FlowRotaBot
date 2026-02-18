@@ -1,0 +1,35 @@
+import pandas as pd
+import folium
+
+arquivo = "31-01-2026 João Marcos De Toledo Braz.xlsx"
+
+df = pd.read_excel(arquivo)
+
+print("Planilha carregada com sucesso.")
+print("Total de entregas:", len(df))
+
+# Ordenar pela sequência
+df = df.sort_values(by="Sequence")
+
+mapa = folium.Map(
+    location=[df["Latitude"].iloc[0], df["Longitude"].iloc[0]],
+    zoom_start=12
+)
+
+coordenadas = []
+
+for index, row in df.iterrows():
+    coord = [row["Latitude"], row["Longitude"]]
+    coordenadas.append(coord)
+
+    folium.Marker(
+        location=coord,
+        popup=f'Stop: {row["Stop"]}'
+    ).add_to(mapa)
+
+# Desenhar linha conectando os pontos
+folium.PolyLine(coordenadas).add_to(mapa)
+
+mapa.save("mapa_rota.html")
+
+print("Mapa com linha de rota criado com sucesso!")
